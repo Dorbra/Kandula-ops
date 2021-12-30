@@ -9,12 +9,11 @@ for reservation in reservations:
     for instance in reservation["Instances"]:
         instance_state = instance["State"]['Name']
         instance_id = instance["InstanceId"]
-        instance_name = instance["Tags"][0]['Value']
         instance_type = instance["InstanceType"]
         public_ip = instance["PublicIpAddress"]
         private_ip = instance["PrivateIpAddress"]
         print(
-            f"{instance_state}, {instance_name}, {instance_id}, {instance_type}, {public_ip}, {private_ip}")
+            f"{instance_state}, {instance_id}, {instance_type}, {public_ip}, {private_ip}")
 
 
 def get_machine_time():
@@ -24,14 +23,14 @@ def get_machine_time():
 def check_aws_connection():
     # TODO: implement real call to aws describe instances. If successful, return true. otherwise return False
     try:
-        if(instance_state == 'running'):
+        if(reservations):
             is_available = True
         else:
             is_available = False
     except:
         is_available = False
     finally:
-        print("\nFINALLY is_available = {}".format(is_available))
+        print("aws_connection is_available = {}".format(is_available))
     return is_available
 
 
@@ -46,7 +45,7 @@ def check_db_connection():
     except:
         is_available = False
     finally:
-        print("\nFINALLY is_available = {}".format(is_available))
+        print("db_connection is_available = {}".format(is_available))
     return is_available
 
 
@@ -64,4 +63,4 @@ def get_app_health():
     return health_checks, is_app_healthy(health_checks)
 
 
-check_aws_connection()
+get_app_health()
