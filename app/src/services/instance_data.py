@@ -1,4 +1,5 @@
 from boto3 import client
+import json
 
 SAMPLE_INSTANCE_DATA = {
     'Instances': [
@@ -60,4 +61,24 @@ class InstanceData:
         #       NOTE: the `self.ec2_client` is an object that is returned from doing `boto3.client('ec2')` as you can
         #       probably find in many examples on the web
         #       To read more on how to use Boto for EC2 look for the original Boto documentation
+        reservations = self.ec2_client.describe_instances().get("Reservations")
+        instances = []
+
+        for reservation in reservations:
+            instance = reservation['Instances']
+            instances.append(instance)
+            for instance in instances:
+                image_id = instance['ImageId']
+                launch_time = instance['LaunchTime']
+                state_reason = instance['StateReason']
+                mac_address = instance['NetworkInterfaces'][0]['MacAddress']
+                private_dns_name = instance['PrivateDnsName']
+                public_dns_name = instance['PublicDnsName']
+                root_device_name = instance['RootDeviceName']
+                security_group = instance['SecurityGroups']
+                print(instance)
+
+        instance_data_json = json.dumps(instances, default=str)
+        print(instance_data_json)
+
         return SAMPLE_INSTANCE_DATA
