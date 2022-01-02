@@ -45,19 +45,55 @@ def get_state_reason(instance):
         return instance['StateReason']['Message']
 
 
+def get_public_ip_reason(instance):
+    if "PublicIpAddress" in instance:
+        return instance['PublicIpAddress']
+
+
 class InstanceData:
     def __init__(self, ec2_client: client):
         self.ec2_client = ec2_client
 
     def get_instances(self):
-        # TODO: The below JSON should be populated using real instance data (instead of the SAMPLE_INSTANCE_DATA)
-        #       The format of SAMPLE_INSTANCE_DATA (field names and JSON structure)
-        #       must be kept in order to be properly displayed in the application UI
-        #
-        #       Notice that when the machine is running the "StateReason" filed should be set to None
-        #       and will not be shown in the UI
-        #
-        #       NOTE: the `self.ec2_client` is an object that is returned from doing `boto3.client('ec2')` as you can
-        #       probably find in many examples on the web
-        #       To read more on how to use Boto for EC2 look for the original Boto documentation
-        return SAMPLE_INSTANCE_DATA
+        my_instances = self.ec2_client.describe_instances()
+
+        instances_data = []
+        instance_data_dict_list = []
+
+        for instance in my_instances['Reservations']:
+            for data in instance['Instances']:
+                instances_data.append(data)
+
+        for instance in instances_data:
+            try:
+                if instance['State']['Name'] != "terminated" or instance['State']['Name'] != "shutting-down":
+                    instance_data_dict = {}
+                    instance_data_dict['Cloud'] = 'aws'
+                    instance_data_dict['Region'] = self.ec2_client.meta.region_name
+                    instance_data_dict['Id'] = instance['InstanceId']
+                    instance_data_dict['Type'] = instance['InstanceType']
+                    instance_data_dict['ImageId'] = instance['ImageId']
+                    instance_data_dict['LaunchTime'] = instance['LaunchTime']
+                    instance_data_dict['State'] = instance['State']['Name']
+                    instance_data_dict['StateReason'] = get_state_reason(
+                        instance)
+                    instance_data_dict['SubnetId'] = instance['SubnetId']
+                    instance_data_dict['VpcId'] = instance['VpcId']
+                    instance_data_dict['MacAddress'] = instance['NetworkInterfaces'][0]['MacAddress']
+                    instance_data_dict['NetworkInterfaceId'] = instance['NetworkInterfaces'][0]['NetworkInterfaceId']
+                    instance_data_dict['PrivateDnsName'] = instance['PrivateDnsName']
+                    instance_data_dict['PrivateIpAddress'] = instance['PrivateIpAddress']
+                    instance_data_dict['PublicDnsName'] = instance['PublicDnsName']
+                    instance_data_dict['PublicIpAddress'] = get_public_ip_reason(
+                        instance)
+                    instance_data_dict['RootDeviceName'] = instance['RootDeviceName']
+                    instance_data_dict['RootDeviceType'] = instance['RootDeviceType']
+                    instance_data_dict['SecurityGroups'] = instance['SecurityGroups']
+                    instance_data_dict['Tags'] = instance['Tags']
+
+                    instance_data_dict_list.append(instance_data_dict)
+                    print(instance_data_dict_list[0])
+            except Exception:
+                raise
+
+        return {'Instances': instance_data_dict_list}
