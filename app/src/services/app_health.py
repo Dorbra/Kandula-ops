@@ -10,10 +10,9 @@ for reservation in reservations:
         instance_state = instance["State"]['Name']
         instance_id = instance["InstanceId"]
         instance_type = instance["InstanceType"]
-        public_ip = instance["PublicIpAddress"]
         private_ip = instance["PrivateIpAddress"]
         print(
-            f"{instance_state}, {instance_id}, {instance_type}, {public_ip}, {private_ip}")
+            f"{instance_state}, {instance_id}, {instance_type}, {private_ip}")
 
 
 def get_machine_time():
@@ -31,6 +30,7 @@ def check_aws_connection():
         is_available = False
     finally:
         print("aws_connection is_available = {}".format(is_available))
+
     return is_available
 
 
@@ -61,6 +61,3 @@ def get_app_health():
     ]
 
     return health_checks, is_app_healthy(health_checks)
-
-
-get_app_health()

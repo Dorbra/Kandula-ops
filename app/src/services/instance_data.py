@@ -1,6 +1,21 @@
 from boto3 import client
 import json
 
+# ec2_client = client("ec2")
+# instances = []
+
+
+# reservations = ec2_client.describe_instances().get("Reservations")
+# for reservation in reservations:
+#     for instance in reservation["Instances"]:
+#         instances.append(instance)
+
+# new_json = dict()
+# new_json["Instances"] = instances
+# instance_data_json = json.dumps(instances, default=str)
+# print("instance_data JSON:")
+# print({'Instances': instance_data_json})
+
 SAMPLE_INSTANCE_DATA = {
     'Instances': [
         {'Cloud': 'aws', 'Region': 'us-east-1', 'Id': 'i-53d13a927070628de', 'Type': 'a1.2xlarge',
@@ -51,34 +66,17 @@ class InstanceData:
         self.ec2_client = ec2_client
 
     def get_instances(self):
-        # TODO: The below JSON should be populated using real instance data (instead of the SAMPLE_INSTANCE_DATA)
-        #       The format of SAMPLE_INSTANCE_DATA (field names and JSON structure)
-        #       must be kept in order to be properly displayed in the application UI
-        #
-        #       Notice that when the machine is running the "StateReason" filed should be set to None
-        #       and will not be shown in the UI
-        #
-        #       NOTE: the `self.ec2_client` is an object that is returned from doing `boto3.client('ec2')` as you can
-        #       probably find in many examples on the web
-        #       To read more on how to use Boto for EC2 look for the original Boto documentation
         reservations = self.ec2_client.describe_instances().get("Reservations")
         instances = []
 
         for reservation in reservations:
-            instance = reservation['Instances']
-            instances.append(instance)
-            for instance in instances:
-                image_id = instance['ImageId']
-                launch_time = instance['LaunchTime']
-                state_reason = instance['StateReason']
-                mac_address = instance['NetworkInterfaces'][0]['MacAddress']
-                private_dns_name = instance['PrivateDnsName']
-                public_dns_name = instance['PublicDnsName']
-                root_device_name = instance['RootDeviceName']
-                security_group = instance['SecurityGroups']
-                print(instance)
+            for instance in reservation["Instances"]:
+                instances.append(instance)
+
+        # with open("myfile.json", 'r') as f:
+        #     myjson = json.load(f)
+        # instances = {'Main Parent': myjson}
 
         instance_data_json = json.dumps(instances, default=str)
-        print(instance_data_json)
 
-        return SAMPLE_INSTANCE_DATA
+        return {'Instances': instance_data_json}
