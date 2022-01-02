@@ -26,11 +26,13 @@ def create_app() -> Flask:
 
     app.add_url_rule('/', 'home', views.home, methods=['GET'])
     app.add_url_rule('/home', 'home', views.home, methods=['GET'])
-    app.add_url_rule('/scheduler', 'scheduler', views.scheduler, methods=['GET', 'POST'])
+    app.add_url_rule('/scheduler', 'scheduler',
+                     views.scheduler, methods=['GET', 'POST'])
     app.add_url_rule('/metrics', 'metrics', views.metrics, methods=['GET'])
     app.add_url_rule('/about', 'about', views.about, methods=['GET'])
     app.add_url_rule('/health', 'health', views.health, methods=['GET'])
-    app.add_url_rule('/instances', 'instances', views.instances, methods=['GET'])
+    app.add_url_rule('/instances', 'instances',
+                     views.instances, methods=['GET'])
     app.add_url_rule('/instances/<string:instance_id>/<string:instance_action>',
                      view_func=InstanceAPI.as_view('instance_actions'), methods=['GET', 'POST'])
 
@@ -43,7 +45,8 @@ def create_app() -> Flask:
         @app.template_filter()
         def today_scheduling(hour):
             now = datetime.now()
-            today_scheduling_time = now.replace(second=0, microsecond=0, minute=0, hour=hour)
+            today_scheduling_time = now.replace(
+                second=0, microsecond=0, minute=0, hour=hour)
             return today_scheduling_time.strftime("%d/%m/%y %H:%M:%S")
 
         init_logging()

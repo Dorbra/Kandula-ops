@@ -20,7 +20,6 @@ def get_machine_time():
 
 
 def check_aws_connection():
-    # TODO: implement real call to aws describe instances. If successful, return true. otherwise return False
     try:
         if(reservations):
             is_available = True
@@ -35,7 +34,6 @@ def check_aws_connection():
 
 
 def check_db_connection():
-    # TODO: implement real select query to db. If successful, return true. otherwise return False
     try:
         # UPDATE TO CHECK DBs subnet/group connection
         if(reservations):
