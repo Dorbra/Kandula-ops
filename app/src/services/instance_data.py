@@ -1,20 +1,4 @@
 from boto3 import client
-import json
-
-# ec2_client = client("ec2")
-# instances = []
-
-
-# reservations = ec2_client.describe_instances().get("Reservations")
-# for reservation in reservations:
-#     for instance in reservation["Instances"]:
-#         instances.append(instance)
-
-# new_json = dict()
-# new_json["Instances"] = instances
-# instance_data_json = json.dumps(instances, default=str)
-# print("instance_data JSON:")
-# print({'Instances': instance_data_json})
 
 SAMPLE_INSTANCE_DATA = {
     'Instances': [
@@ -61,22 +45,55 @@ def get_state_reason(instance):
         return instance['StateReason']['Message']
 
 
+def get_public_ip_reason(instance):
+    if "PublicIpAddress" in instance:
+        return instance['PublicIpAddress']
+
+
 class InstanceData:
     def __init__(self, ec2_client: client):
         self.ec2_client = ec2_client
 
     def get_instances(self):
-        reservations = self.ec2_client.describe_instances().get("Reservations")
-        instances = []
+        my_instances = self.ec2_client.describe_instances()
 
-        for reservation in reservations:
-            for instance in reservation["Instances"]:
-                instances.append(instance)
+        instances_data = []
+        instance_data_dict_list = []
 
-        # with open("myfile.json", 'r') as f:
-        #     myjson = json.load(f)
-        # instances = {'Main Parent': myjson}
+        for instance in my_instances['Reservations']:
+            for data in instance['Instances']:
+                instances_data.append(data)
 
-        instance_data_json = json.dumps(instances, default=str)
+        for instance in instances_data:
+            try:
+                if instance['State']['Name'] != "terminated" or instance['State']['Name'] != "shutting-down":
+                    instance_data_dict = {}
+                    instance_data_dict['Cloud'] = 'aws'
+                    instance_data_dict['Region'] = self.ec2_client.meta.region_name
+                    instance_data_dict['Id'] = instance['InstanceId']
+                    instance_data_dict['Type'] = instance['InstanceType']
+                    instance_data_dict['ImageId'] = instance['ImageId']
+                    instance_data_dict['LaunchTime'] = instance['LaunchTime']
+                    instance_data_dict['State'] = instance['State']['Name']
+                    instance_data_dict['StateReason'] = get_state_reason(
+                        instance)
+                    instance_data_dict['SubnetId'] = instance['SubnetId']
+                    instance_data_dict['VpcId'] = instance['VpcId']
+                    instance_data_dict['MacAddress'] = instance['NetworkInterfaces'][0]['MacAddress']
+                    instance_data_dict['NetworkInterfaceId'] = instance['NetworkInterfaces'][0]['NetworkInterfaceId']
+                    instance_data_dict['PrivateDnsName'] = instance['PrivateDnsName']
+                    instance_data_dict['PrivateIpAddress'] = instance['PrivateIpAddress']
+                    instance_data_dict['PublicDnsName'] = instance['PublicDnsName']
+                    instance_data_dict['PublicIpAddress'] = get_public_ip_reason(
+                        instance)
+                    instance_data_dict['RootDeviceName'] = instance['RootDeviceName']
+                    instance_data_dict['RootDeviceType'] = instance['RootDeviceType']
+                    instance_data_dict['SecurityGroups'] = instance['SecurityGroups']
+                    instance_data_dict['Tags'] = instance['Tags']
 
-        return {'Instances': instance_data_json}
+                    instance_data_dict_list.append(instance_data_dict)
+                    print(instance_data_dict_list[0])
+            except Exception:
+                raise
+
+        return {'Instances': instance_data_dict_list}
