@@ -26,22 +26,28 @@ class InstanceAPI(MethodView):
 
     def get(self, instance_id, instance_action):
         try:
-            action_to_run = self.instance_actions.action_selector(instance_action)
+            action_to_run = self.instance_actions.action_selector(
+                instance_action)
             action_to_run(instance_id)
-            flash("Your request to {} instance {} is in progress".format(instance_action, instance_id), "info")
+            flash("Your request to {} instance {} is in progress".format(
+                instance_action, instance_id), "info")
         except (ClientError, RuntimeError) as e:
-            flash("Cannot perform action '{}' on instance: {}".format(instance_action, instance_id), "danger")
+            flash("Cannot perform action '{}' on instance: {}".format(
+                instance_action, instance_id), "danger")
             logger.exception(e)
 
         return redirect(url_for('instances'))
 
     def post(self, instance_id, instance_action):
         try:
-            action_to_run = self.instance_actions.action_selector(instance_action)
+            action_to_run = self.instance_actions.action_selector(
+                instance_action)
             action_to_run(instance_id)
-            flash("Your request to {} instance {} is in progress".format(instance_action, instance_id), "info")
+            flash("Your request to {} instance {} is in progress".format(
+                instance_action, instance_id), "info")
         except (ClientError, RuntimeError) as e:
-            flash("Cannot perform action '{}' on instance: {}".format(instance_action, instance_id), "danger")
+            flash("Cannot perform action '{}' on instance: {}".format(
+                instance_action, instance_id), "danger")
             logger.exception(e)
 
         return redirect(url_for('instances'))
