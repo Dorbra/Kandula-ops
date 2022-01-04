@@ -75,8 +75,7 @@ class InstanceData:
                     instance_data_dict['ImageId'] = instance['ImageId']
                     instance_data_dict['LaunchTime'] = instance['LaunchTime']
                     instance_data_dict['State'] = instance['State']['Name']
-                    instance_data_dict['StateReason'] = get_state_reason(
-                        instance)
+                    instance_data_dict['StateReason'] = get_state_reason( instance)
                     instance_data_dict['SubnetId'] = instance['SubnetId']
                     instance_data_dict['VpcId'] = instance['VpcId']
                     instance_data_dict['MacAddress'] = instance['NetworkInterfaces'][0]['MacAddress']
@@ -84,8 +83,7 @@ class InstanceData:
                     instance_data_dict['PrivateDnsName'] = instance['PrivateDnsName']
                     instance_data_dict['PrivateIpAddress'] = instance['PrivateIpAddress']
                     instance_data_dict['PublicDnsName'] = instance['PublicDnsName']
-                    instance_data_dict['PublicIpAddress'] = get_public_ip_reason(
-                        instance)
+                    instance_data_dict['PublicIpAddress'] = get_public_ip_reason(instance)
                     instance_data_dict['RootDeviceName'] = instance['RootDeviceName']
                     instance_data_dict['RootDeviceType'] = instance['RootDeviceType']
                     instance_data_dict['SecurityGroups'] = instance['SecurityGroups']
