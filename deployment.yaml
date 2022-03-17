@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kanduka-app-deployment
+  name: kandula-app-deployment
   annotations:
     kubernetes.io/change-cause: First deploy of Kandula app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: kandula-app
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kandula
-          image: 'dorbra/kandula-midproject:1.0'
+          image: 'dorbra/kandula-midproject:${VERSION}'
           env:
             - name: FLASK_ENV
               value: development
