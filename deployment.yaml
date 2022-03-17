@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kandula
-          image: 'dorbra/kandula-midproject:${VERSION}'
+          image: 'dorbra/kandula-midproject:latest'
           env:
             - name: FLASK_ENV
               value: development
