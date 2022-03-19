@@ -14,7 +14,6 @@ spec:
       labels:
         app: kandula-app
     spec:
-      serviceAccountName: opsschool-sa
       containers:
         - name: kandula
           image: 'dorbra/kandula-midproject:latest'
