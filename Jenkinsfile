@@ -3,7 +3,7 @@ pipeline{
     stages{
         stage "build" {
             steps{
-                echo "BUILD FROM GIT WITH Jenkinsfile
+                sh 'echo "BUILD FROM GIT WITH Jenkinsfile"'
             }
         }
     }
