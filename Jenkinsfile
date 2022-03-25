@@ -1,10 +1,8 @@
 pipeline{
     agent {label 'linux'}
 
-    stages{
-        stage("Deploy"){
-            sh 'echo "JENKINSFILE FROM GIT"'
-            
-                }
+    stages {
+        stage ("build") {
+            echo "JENKINSFILE"
+        }
     }
-}
