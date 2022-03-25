@@ -6,3 +6,5 @@ pipeline{
             sh 'echo "JENKINSFILE FROM GIT"'
             
                 }
+    }
+}
