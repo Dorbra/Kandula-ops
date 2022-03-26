@@ -23,7 +23,7 @@ def get_machine_time():
 
 
 def check_aws_connection():
-    logger.log("Kandula - HealthCheck - Checking AWS connection")
+    logger.info("Kandula - HealthCheck - Checking AWS connection")
     try:
         if(reservations):
             is_available = True
@@ -38,7 +38,7 @@ def check_aws_connection():
 
 
 def check_db_connection():
-    logger.log("Kandula - HealthCheck - Checking DB connection")
+    logger.info("Kandula - HealthCheck - Checking DB connection")
     try:
         # UPDATE TO CHECK DBs subnet/group connection
 
