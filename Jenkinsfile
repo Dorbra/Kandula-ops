@@ -21,7 +21,8 @@ node(label: 'linux') {
         sh 'aws eks update-kubeconfig --region us-east-1 --name dorbra-kandula-prod-23'
     }
     stage("Deploy Kandula on k8s") {
-        sh 'sudo ./kandula-script.sh'
+        sh 'chmod +x kandula-script.sh'
+        sh './kandula-script.sh'
     }
   }
 
