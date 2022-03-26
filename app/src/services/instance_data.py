@@ -1,4 +1,8 @@
 from boto3 import client
+import json
+import logging
+
+logger = logging.getLogger()
 
 SAMPLE_INSTANCE_DATA = {
     'Instances': [
@@ -55,6 +59,7 @@ class InstanceData:
         self.ec2_client = ec2_client
 
     def get_instances(self):
+        logger.log("Kandula - get_instances Init")
         my_instances = self.ec2_client.describe_instances()
 
         instances_data = []
@@ -75,7 +80,7 @@ class InstanceData:
                     instance_data_dict['ImageId'] = instance['ImageId']
                     instance_data_dict['LaunchTime'] = instance['LaunchTime']
                     instance_data_dict['State'] = instance['State']['Name']
-                    instance_data_dict['StateReason'] = get_state_reason( instance)
+                    instance_data_dict['StateReason'] = get_state_reason(instance)
                     instance_data_dict['SubnetId'] = instance['SubnetId']
                     instance_data_dict['VpcId'] = instance['VpcId']
                     instance_data_dict['MacAddress'] = instance['NetworkInterfaces'][0]['MacAddress']
@@ -91,6 +96,7 @@ class InstanceData:
 
                     instance_data_dict_list.append(instance_data_dict)
                     print(instance_data_dict_list[0])
+                    logger.log("Kandula - instance data " + instance)
             except Exception:
                 raise
 
