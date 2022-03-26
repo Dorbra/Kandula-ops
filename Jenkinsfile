@@ -33,38 +33,64 @@ pipeline{
                         script {
             dep = sh """
                     tee dep.yaml <<-'EOF'
-                    apiVersion: apps/v1
-                    kind: Deployment
-                    metadata:
-                      name: kandula-app-deployment
-                      annotations:
-                        kubernetes.io/change-cause: "First deploy of Kandula app"
-                    spec:
-                      replicas: 1
-                      selector:
-                        matchLabels:
-                          app: kandula-app
-                      template:
-                        metadata:
-                          labels:
-                            app: kandula-app
-                        spec:
-                          containers:
-                            - name: kandula
-                              image: dorbra/kandula-midproject:${VERSION}
-                              env:
-                                - name: FLASK_ENV
-                                  value: "development"
-                                - name: AWS_ACCESS_KEY_ID
-                                  value: "${AWS_ACCESS_KEY_ID}"
-                                - name: AWS_SECRET_ACCESS_KEY
-                                  value: "${AWS_SECRET_ACCESS_KEY}"
-                                - name: AWS_DEFAULT_REGION
-                                  value: "${AWS_DEFAULT_REGION}"
-                              ports:
-                                - containerPort: 5000
-                                  name: http
-                                  protocol: TCP
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kandula-app-deployment
+  annotations:
+    kubernetes.io/change-cause: First deploy of Kandula app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kandula-app
+  template:
+    metadata:
+      labels:
+        app: kandula-app
+    spec:
+      serviceAccountName: opsschool-sa
+      containers:
+        - name: kandula
+          image: 'dorbra/kandula-midproject:latest'
+          env:
+            - name: FLASK_ENV
+              value: development
+            - name: AWS_ACCESS_KEY_ID
+              value: '${AWS_ACCESS_KEY_ID}'
+            - name: AWS_SECRET_ACCESS_KEY
+              value: '${AWS_SECRET_ACCESS_KEY}'
+            - name: AWS_DEFAULT_REGION
+              value: '${AWS_DEFAULT_REGION}'
+          ports:
+            - containerPort: 5000
+              name: http
+              protocol: TCP
+            - containerPort: 9100
+              name: prometheus
+              protocol: TCP
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - kandula-app
+              topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - kandula-app
+                topologyKey: topology.kubernetes.io/zone
+
+                                  
                 """
     }}}
                 }
