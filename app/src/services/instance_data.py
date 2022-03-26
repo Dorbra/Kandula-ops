@@ -59,7 +59,7 @@ class InstanceData:
         self.ec2_client = ec2_client
 
     def get_instances(self):
-        logger.log("Kandula - get_instances Init")
+        logger.info("Kandula - get_instances Init")
         my_instances = self.ec2_client.describe_instances()
 
         instances_data = []
@@ -96,7 +96,7 @@ class InstanceData:
 
                     instance_data_dict_list.append(instance_data_dict)
                     print(instance_data_dict_list[0])
-                    logger.log("Kandula - instance data " + instance)
+                    logger.info("Kandula - instance data " + instance)
             except Exception:
                 raise
 
