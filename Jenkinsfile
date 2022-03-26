@@ -21,12 +21,7 @@ node(label: 'linux') {
         sh 'aws eks update-kubeconfig --region us-east-1 --name dorbra-kandula-prod-23'
     }
     stage("Deploy Kandula on k8s") {
-        sh 'export ID="$(aws secretsmanager --region us-east-1 get-secret-value --secret-id kandula/aws/creds | jq -r '.SecretString' | jq -r '.ID')"'
-        sh 'export KEY="$(aws secretsmanager --region us-east-1 get-secret-value --secret-id kandula/aws/creds | jq -r '.SecretString' | jq -r '.KEY')"'
-        sh 'sed -i -e "s/AWSID/${ID}/g" kandula-deploy.yaml'
-        sh 'sed -i -e "s@AWSKEY@${KEY}@g" kandula-deploy.yaml'
-        sh 'kubectl apply -f kandula-deploy.yaml'
-        sh 'kubectl apply -f service.yaml'
+        sh 'sudo ./kandula-script.sh'
     }
   }
 
