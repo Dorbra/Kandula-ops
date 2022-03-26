@@ -2,7 +2,7 @@ pipeline{
     agent {label 'linux'}
     parameters {
         choice(name: 'deploy', choices: ['enabled', 'disabled'], description: 'deploy docker?' )
-        string(defaultValue: '0', description: 'Build Versioning', name: 'VERSION')
+        string(defaultValue: 'latest', description: 'Build Versioning', name: 'VERSION')
     }
     stages{
         stage("Deploy?"){
