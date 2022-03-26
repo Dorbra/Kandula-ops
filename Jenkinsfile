@@ -95,7 +95,7 @@ pipeline{
     }
     stage ('K8S Deploy Application') {
         steps {
-      sh 'kubectl apply -f deployment.yaml'
+      sh 'kubectl apply -f dep.yaml'
     }}
     stage ('K8S Deploy Service') {
         steps {
