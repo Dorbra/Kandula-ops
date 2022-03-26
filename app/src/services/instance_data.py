@@ -96,7 +96,8 @@ class InstanceData:
 
                     instance_data_dict_list.append(instance_data_dict)
                     print(instance_data_dict_list[0])
-                    logger.info("Kandula - instance data " + instance)
+                    logger.info("Kandula - instance data ")
+                    logger.info(instance_data_dict)
             except Exception:
                 raise
 
