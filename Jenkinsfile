@@ -90,7 +90,7 @@ pipeline{
     }}}
     stage ('set kubernetes cluster') {
         steps {
-            sh ('aws eks update-kubeconfig --region us-east-1 --name dorbra-kandula-prod-23') 
+            sh 'aws eks update-kubeconfig --region us-east-1 --name dorbra-kandula-prod-23' 
         }
     }
     stage ('K8S Deploy Application') {
