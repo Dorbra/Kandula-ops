@@ -102,7 +102,6 @@ INSTANCES_REQUEST_TIME = REQUEST_TIME.labels(endpoint='instances')
 
 
 @INSTANCES_REQUEST_TIME.time()
-@inject
 def instances(instance_data: InstanceData = Provide[Container.instance_data]):
     instances_response = instance_data.get_instances()
     REQUESTS_COUNTER.labels(method='GET', endpoint='instances').inc(1)
