@@ -34,6 +34,10 @@ spec:
             - containerPort: 9100
               name: prometheus
               protocol: TCP
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"  
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -54,8 +58,3 @@ spec:
                       values:
                         - kandula-app
                 topologyKey: topology.kubernetes.io/zone
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"  
-       
